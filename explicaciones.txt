@@ -1,0 +1,72 @@
+Estrutura e organização
+Separe a app em módulos (ex. app.py, routes.py, schemas.py) para crescer sem virar monólito.
+
+Use Blueprints se for adicionar recursos além de livros.
+
+Não deixe dados em memória para produção; prefira banco (SQLite para começar). Se ficar em memória, documente que é só para demo.
+
+Semântica HTTP e status codes
+GET livros → 200 (ok).
+
+GET livrosid quando não existir → 404 (já faz 👍).
+
+POST livros → 201 Created e Location apontando para livrosnovo_id.
+
+PUT livrosid deve ser idempotente e substituir o recurso (ou use PATCH para atualização parcial).
+
+DELETE livrosid → prefira 204 No Content (sem retornar a lista inteira).
+
+Validação de entrada
+Garanta Content-Type applicationjson (request.is_json) e trate JSONDecodeError.
+
+Valide campos obrigatórios (titulo, autor) e tipos.
+
+Não permita mudar o id em PUTPATCH.
+
+Trate duplicidade de id no POST (ou melhor gere o id no servidor).
+
+Geração e integridade de IDs
+Gere id automaticamente max(livros, default={'id'0})['id'] + 1.
+
+Evite colisões de id se houver requisições concorrentes (use lock se insistir em memória).
+
+Respostas e conteúdo
+Padronize payloads de erro { error { code ..., message ... } }.
+
+Defina mimetype=applicationjson (o jsonify já faz, mas mantenha padrão).
+
+Em POST, retorne somente o recurso criado, não a lista inteira.
+
+Filtros, paginação e ordenação (qualidade de vida)
+Aceite query params em GET livros
+
+autor=...&titulo=...
+
+page=1&per_page=20
+
+sort=autor&order=asc
+
+Evita trazer listas enormes e dá controle ao cliente.
+
+Erros globais e segurança
+Crie handlers globais para 400, 404, 405, 500 com JSON consistente.
+
+Opcional habilite CORS (ex. flask-cors) se consumir no browser.
+
+Remova debug=True em produção. (Deixe via FLASK_ENV=developmentFLASK_DEBUG no .env.)
+
+Boas práticas de REST
+Idempotência
+
+PUT deve aceitar corpo completo (ou troque por PATCH para parciais).
+
+DELETE pode retornar 204 sempre que possível.
+
+Use url_for para montar Location no POST.
+
+Considere ETagIf-None-Match para cacheconcorrência (mais avançado).
+
+Tipagem e manutenção
+Adicione type hints e docstrings.
+
+Se quiser validação robusta, use Pydanticmarshmallow.
