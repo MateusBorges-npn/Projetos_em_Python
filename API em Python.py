@@ -4,16 +4,19 @@ app = Flask(__name__)
 
 livros = [
     {
+        
         "id": 1,
         "titulo": 'O senhor dos anéis - A Sociedade do Anel',
         'autor': 'J.R.R. Tolkien'
     },
     {
+        
         'id': 2,
         'titulo': 'Percy Jackson - O ladrão de Raios',
         'autor': 'Rick Riordan'
     },
     {
+        
         'id': 3,
         'titulo':  'Harry Potter - A pedra filosofal',
         'autor': 'J.K. Rowling'
